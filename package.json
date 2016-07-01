@@ -1,0 +1,25 @@
+{
+  "name": "birdpoo",
+  "version": "1.0.0",
+  "description": "Simple, effective JavaScript benchmarking.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/treshugart/birdpoo.git"
+  },
+  "keywords": [
+    "benchmark"
+  ],
+  "author": "Trey Shugart <treshugart@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/treshugart/birdpoo/issues"
+  },
+  "homepage": "https://github.com/treshugart/birdpoo#readme",
+  "devDependencies": {
+    "mocha": "^2.5.3"
+  }
+}
