@@ -10,7 +10,7 @@ npm install birdpoo
 
 ## Using
 
-Birdpoo (or BP so we can stop chuckling like 5-year olds), is just a single function that returns a promise with the operations per second. It accpets two arguments:
+Birdpoo (or BP so we can stop chuckling like 5-year olds), is just a single function that returns a promise with the operations per second. It accepts two arguments:
 
 1. The function that does the benchmarking.
 2. Options:
