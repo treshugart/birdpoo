@@ -14,7 +14,7 @@ Birdpoo (or BP so we can stop chuckling like 5-year olds), is just a single func
 
 1. The function that does the benchmarking.
 2. Options:
-  - `before` - Called before each execution to set do any necessary setup and to pass any information to the benchmark function that it needs to run. The return value is used as the arguments passed to the bencmark function and should be an `array`, if returning.
+  - `before` - Called before each execution to do any necessary setup and pass information to the benchmark function that it needs to run. The return value is used as the arguments passed to the bencmark function and, if passing arguments, it should be an `array`.
   - `after` - Called after each execution to do any necessary cleanup.
   - `time` - The number of milliseconds to benchmark for.
 
