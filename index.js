@@ -12,9 +12,9 @@ module.exports = function (func, opts = {}) {
   let elapsed = 0
   let runs = 0;
   
-  after = opts.after || noop;
-  before = opts.before || noop;
-  time = opts.time || 1000;
+  const after = opts.after || noop;
+  const before = opts.before || noop;
+  const time = opts.time || 1000;
   
   while (elapsed < time) {
     const arg = before() || [];
