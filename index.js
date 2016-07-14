@@ -9,7 +9,8 @@ function hrtime () {
 }
 
 module.exports = function (func, opts = {}) {
-  let elapsed = runs = 0;
+  let elapsed = 0
+  let runs = 0;
   
   after = opts.after || noop;
   before = opts.before || noop;
