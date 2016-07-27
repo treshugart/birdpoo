@@ -33,7 +33,7 @@ function benchmark(next) {
   console.log(this.data);
 
   // You call next to proceed to the after() function. This can be async.
-  next({ some: 'data' });
+  next();
 }
 
 function after(next) {
