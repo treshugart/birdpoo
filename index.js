@@ -9,31 +9,35 @@ function hrtime () {
 }
 
 module.exports = function (func, opts = {}) {
-  let running = false;
-  let elapsed = 0
-  let runs = 0;
-  
-  const after = opts.after || noop;
-  const before = opts.before || noop;
-  const time = opts.time || 1000;
+  return new Promise(res => {
+    let elapsed = 0
+    let runs = 0;
+    
+    const after = opts.after || noop;
+    const before = opts.before || noop;
+    const time = opts.time || 1000;
 
-  function proceed() {
-    running = false;
-  }
-
-  function run(next, data) {
-    const now = hrtime();
-    func(next, data);
-    elapsed += hrtime() - now;
-    ++runs;
-  }
-
-  while (elapsed < time) {
-    if (!running) {
-      running = true;
-      before(run.bind(null, after.bind(null, proceed)));
+    function benchmark() {
+      if (elapsed < time) {
+        before(run.bind(null, after.bind(null, proceed)));
+      } else {
+        res(runs / (time / 1000));
+      }
     }
-  }
-  
-  return Promise.resolve(runs / (time / 1000));
+
+    function proceed() {
+      setTimeout(benchmark);
+    }
+
+    function run(next, data) {
+      const now = hrtime();
+      func((...args) => {
+        elapsed += hrtime() - now;
+        ++runs;
+        next(...args);
+      }, data);
+    }
+
+    benchmark();
+  });
 };
