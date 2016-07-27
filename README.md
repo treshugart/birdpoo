@@ -20,44 +20,33 @@ Birdpoo (or BP so we can stop chuckling like 5-year olds), is just a single func
 
 ```js
 function before(next) {
-  // There is no `data` argument for before().
-  // You call `next()` to signal completion of `before()` and to signal the
-  // start of the benchmark cycle. The data you pass in is available as `data`
-  // in the main benchmark function.
+  // `this` refers to the passed in options so this persists throughout the
+  // benchmark's lifeyccle.
+  this.data = { some: 'data' };
+
+  // You call next to proceed to the benchmark() function. This can be async.
+  next();
+}
+
+function benchmark(next) {
+  // The options are accessible in any function. Logs: `{ some: 'data' }`.
+  console.log(this.data);
+
+  // You call next to proceed to the after() function. This can be async.
   next({ some: 'data' });
 }
 
-function benchmark(next, data) {
-  // The `data` argumnent is whatever was passed into `next()` in the
-  // `before()` callback.
-  //
-  // { some: 'data' }
-  console.log(data[0]);
+function after(next) {
+  // The options are accessible in any function. Logs: `{ some: 'data' }`.
+  console.log(this.data);
 
-  // You call `next()` to signal completion of the benchmark cycle and to call
-  // `after()`. The arguments you pass in here are passed to `after()`.
-  next({ some: 'data' });
-}
-
-function after(next, data) {
-  // The `data` argument is whatever was passed into `next()` in the main
-  // benchmark function.
-  //
-  // { some: 'data' }
-  console.log(data);
-
-  // You call next to proceed to the next benchmark cycle which may call
-  // `before()`. This can be async: `setTimeout(next, 100)`. Any arguments
-  // passed to `next()` here are ignored.
+  // You call next to proceed to signify completion and to star the next cycle.
   next();
 }
 
 const time = 1000;
 
-benchmark(benchmark, {
-  after,
-  before,
-}).then(console.log);
+benchmark(benchmark, { after, before, time }).then(console.log);
 ```
 
 The benchmark will probably run over the amount of time specified in the `options` due to the execution time of `before` and `after`, but only the time taken for the benchmark function to run will factor into the result.
