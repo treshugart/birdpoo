@@ -11,14 +11,14 @@ describe('birdpoo', () => {
     bp(next => {
       called = true;
       next();
-    }, { time: 100 })
+    }, { time: 1 })
       .then(_ => assert.ok(called))
       .then(done, done);
   });
 
   it('should pass the operations per second to the promise', done => {
     let called;
-    bp(next => next(), { time: 100 })
+    bp(next => next(), { time: 1 })
       .then((...args) => {
         assert.equal(args.length, 1);
         assert.equal(typeof args[0], 'number');
@@ -26,29 +26,61 @@ describe('birdpoo', () => {
       .then(done, done);
   });
 
-  it('before()', done => {
-    let called;
-    bp(next => next(), {
-      before(next) {
-        called = true;
+  describe('before()', () => {
+    it('should be called', done => {
+      let called;
+      bp(next => next(), {
+        before(next) {
+          called = true;
+          next();
+        },
+        time: 1
+      })
+        .then(() => assert.ok(called))
+        .then(done, done);
+    });
+
+    it('should pass args to benchmark function', done => {
+      let obj = {};
+      let passed;
+      bp((next, data) => {
+        passed = data;
         next();
-      },
-      time: 100
-    })
-      .then(() => assert.ok(called))
-      .then(done, done);
+      }, {
+        before: next => next(obj),
+        time: 1
+      })
+        .then(() => assert.equal(passed, obj))
+        .then(done, done);
+    });
   });
 
-  it('after()', done => {
-    let called;
-    bp(next => next(), { 
-      after(next) {
-        called = true;
-        next();
-      },
-      time: 100 
-    })
-      .then(() => assert.ok(called))
-      .then(done, done);
+  describe('after()', () => {
+    it('should be called', done => {
+      let called;
+      bp(next => next(), { 
+        after(next) {
+          called = true;
+          next();
+        },
+        time: 1
+      })
+        .then(() => assert.ok(called))
+        .then(done, done);
+    });
+
+    it('should be passed args from the benchmark function', done => {
+      let obj = {};
+      let passed;
+      bp(next => next(obj), {
+        after: (next, data) => {
+          passed = data;
+          next();
+        },
+        time: 1
+      })
+        .then(() => assert.equal(passed, obj))
+        .then(done, done);
+    });
   });
 });
