@@ -1,7 +1,7 @@
 const browser = typeof window === 'object';
 
-function noop () {
-  // poop
+function noop (next) {
+  next();
 }
 
 function hrtime () {
@@ -9,20 +9,30 @@ function hrtime () {
 }
 
 module.exports = function (func, opts = {}) {
+  let running = false;
   let elapsed = 0
   let runs = 0;
   
   const after = opts.after || noop;
   const before = opts.before || noop;
   const time = opts.time || 1000;
-  
-  while (elapsed < time) {
-    const arg = before() || [];
+
+  function proceed() {
+    running = false;
+  }
+
+  function run(next, data) {
     const now = hrtime();
-    func(arg);
+    func(next, data);
     elapsed += hrtime() - now;
-    after();
     ++runs;
+  }
+
+  while (elapsed < time) {
+    if (!running) {
+      running = true;
+      before(run.bind(null, after.bind(null, proceed)));
+    }
   }
   
   return Promise.resolve(runs / (time / 1000));
