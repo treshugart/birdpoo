@@ -19,7 +19,7 @@ module.exports = function (func, opts = {}) {
   while (elapsed < time) {
     const arg = before() || [];
     const now = hrtime();
-    func.apply(null, arg);
+    func(arg);
     elapsed += hrtime() - now;
     after();
     ++runs;

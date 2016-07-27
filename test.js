@@ -13,11 +13,14 @@ describe('birdpoo', () => {
       .then(done, done);
   });
 
-  it('before(), return value is args to benchmark function', done => {
+  it('before(), return value is first argument to benchmark function', done => {
     let arr = [0, 1, 2];
     let val;
-    bp(arg => val = arg, { before: () => [arr], time: 100 })
-      .then(() => assert.equal(arr, val))
+    bp((...args) => val = args, { before: () => arr, time: 100 })
+      .then(() => {
+        assert.equal(val.length, 1);
+        assert.equal(val[0], arr);
+      })
       .then(done, done);
   });
 
